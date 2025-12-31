@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PricePulse India 🇮🇳</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 1. BACKGROUND IMAGE */
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            padding: 0; margin: 0;
+            background: url('/static/library_bg.jpg') no-repeat center center fixed; 
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 2. OFF-WHITE / VINTAGE PANEL */
+        .main-wrapper {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            /* Changed to Warm Off-White (#fdfbf7) */
+            background: rgba(253, 251, 247, 0.95); 
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            height: 85vh;
+            border: 1px solid #d7ccc8; /* Subtle border */
+        }
+
+        /* LEFT: DASHBOARD */
+        .col-dashboard { flex: 2; padding: 40px; overflow-y: auto; }
+        
+        /* RIGHT: BOOK DETAILS (Leather Color) */
+        .col-book {
+            flex: 1;
+            background: #3e2723; /* Dark Leather Brown */
+            color: #efebe9;       /* Light Cream Text */
+            padding: 40px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            border-left: 4px solid #8d6e63;
+        }
+
+        /* CONTROLS */
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { 
+            flex: 1; padding: 12px; 
+            border: 2px solid #d7ccc8; 
+            border-radius: 8px; 
+            background: #fff;
+            color: #4e342e;
+        }
+        
+        button { padding: 12px 15px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; letter-spacing: 0.5px;}
+        .btn-go { background: #558b2f; }  /* Olive Green */
+        .btn-sim { background: #6d4c41; } /* Warm Brown */
+        .btn-reset { background: #c62828; } /* Muted Red */
+
+        /* STATS CARDS */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-card { 
+            background: #efebe9; /* Very light brown */
+            padding: 15px; 
+            border-radius: 10px; 
+            text-align: center; 
+            border: 1px solid #d7ccc8;
+        }
+        .stat-val { font-size: 1.5em; font-weight: bold; color: #3e2723; }
+
+        /* SEARCH HISTORY */
+        .history-section { margin-top: 30px; border-top: 2px solid #d7ccc8; padding-top: 20px; }
+        .history-title { font-weight: bold; color: #5d4037; margin-bottom: 10px; display: block;}
+        .history-tag { 
+            display: inline-block; background: #8d6e63; color: white; 
+            padding: 5px 12px; border-radius: 15px; margin: 5px 5px 0 0; font-size: 0.85em; 
+        }
+
+        /* BOOK STYLES */
+        .book-cover { width: 160px; border-radius: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); margin-bottom: 25px; border: 4px solid #d7ccc8; }
+        .book-title { font-family: 'Playfair Display', serif; font-size: 1.8em; margin-bottom: 10px; line-height: 1.2; color: #fff;}
+        .book-rating { font-size: 1.5em; color: #ffb300; margin-bottom: 15px; }
+        .book-desc { font-style: italic; opacity: 0.8; font-size: 0.9em; line-height: 1.6; color: #d7ccc8; }
+
+        h2 { color: #3e2723; }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div class="col-dashboard">
+        <h2 style="margin-top:0;">PricePulse India 🇮🇳</h2>
+        
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="Paste Book URL...">
+            <button class="btn-go" onclick="runAction('/add-product')">Track</button>
+            <button class="btn-sim" onclick="runAction('/simulate-history')">Predict 🔮</button>
+            <button class="btn-reset" onclick="runAction('/clear-history')">Reset</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <small style="color:#795548">Max Price</small>
+                <div class="stat-val" id="maxP">₹0</div>
+            </div>
+            <div class="stat-card">
+                <small style="color:#795548">Min Price</small>
+                <div class="stat-val" id="minP">₹0</div>
+            </div>
+            <div class="stat-card">
+                <small style="color:#795548">Average</small>
+                <div class="stat-val" id="avgP">₹0</div>
+            </div>
+        </div>
+
+        <canvas id="priceChart"></canvas>
+
+        <div class="history-section">
+            <span class="history-title">📜 Search History</span>
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <div class="col-book">
+        <div id="emptyState">
+            <h3>No Book Selected</h3>
+            <p>Paste a URL to see details.</p>
+        </div>
+
+        <div id="bookInfo" style="display:none;">
+            <img id="bookImg" class="book-cover" src="">
+            <div id="bookTitle" class="book-title">Title</div>
+            <div id="bookRating" class="book-rating">⭐⭐⭐</div>
+            <div id="bookDesc" class="book-desc">Description text...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function runAction(endpoint) {
+        const url = document.getElementById('urlInput').value;
+        if(endpoint !== '/clear-history' && !url) return alert("Need URL!");
+        
+        await fetch(endpoint, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({url: url})
+        });
+        location.reload();
+    }
+
+    fetch('/api/products').then(res => res.json()).then(data => {
+        const histDiv = document.getElementById('historyList');
+        if (data.search_history) {
+            data.search_history.forEach(book => {
+                histDiv.innerHTML += `<span class="history-tag">${book}</span>`;
+            });
+        }
+
+        if(!data.history || data.history.length === 0) return;
+
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('bookInfo').style.display = 'block';
+        
+        document.getElementById('bookImg').src = data.book_details.image;
+        document.getElementById('bookTitle').innerText = data.book_details.name;
+        document.getElementById('bookRating').innerText = data.book_details.rating;
+        document.getElementById('bookDesc').innerText = '"' + data.book_details.desc + '"';
+
+        document.getElementById('maxP').innerText = '₹' + data.stats.max;
+        document.getElementById('minP').innerText = '₹' + data.stats.min;
+        document.getElementById('avgP').innerText = '₹' + data.stats.avg;
+
+        const history = data.history;
+        const labels = history.map(d => d.scraped_at.substring(0,10));
+        const prices = history.map(d => d.price);
+        
+        let predData = new Array(prices.length - 1).fill(null);
+        predData.push(prices[prices.length - 1]);
+        if(data.prediction) data.prediction.forEach(p => { predData.push(p); labels.push('Future'); });
+
+        // --- NEW BROWN CHART COLORS ---
+        new Chart(document.getElementById('priceChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { 
+                        label: 'History (₹)', 
+                        data: prices, 
+                        borderColor: '#5d4037',     /* Leather Brown */
+                        backgroundColor: 'rgba(93, 64, 55, 0.1)',
+                        borderWidth: 2,
+                        fill: true 
+                    },
+                    { 
+                        label: 'Prediction (₹)', 
+                        data: predData, 
+                        borderColor: '#a1887f',     /* Light Clay */
+                        borderDash: [5,5], 
+                        fill: false 
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: { ticks: { color: '#5d4037' } },
+                    x: { ticks: { color: '#5d4037' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#3e2723' } }
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

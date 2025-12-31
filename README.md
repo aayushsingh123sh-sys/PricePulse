@@ -2,8 +2,7 @@
 
 A full-stack Data Science application that tracks book prices in real-time, converts them to Indian Rupees (₹), and uses Machine Learning to predict future trends.
 
-![Dashboard Preview]
-(static/dashboard_preview.png)
+![Dashboard Preview](static/dashboard_preview.png)
 
 ## 🚀 Features
 * **Real-Time Tracking:** Scrapes live data from book retailers using Python & BeautifulSoup.

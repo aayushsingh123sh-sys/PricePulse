@@ -1,4 +1,7 @@
-# PricePulse India 🇮🇳
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
+![Flask](https://img.shields.io/badge/Framework-Flask-green)
+![Status](https://img.shields.io/badge/Status-Completed-success)
+![License](https://img.shields.io/badge/License-MIT-yellow)# PricePulse India 🇮🇳
 
 A full-stack Data Science application that tracks book prices in real-time, converts them to Indian Rupees (₹), and uses Machine Learning to predict future trends.
 

@@ -6,7 +6,6 @@ import os
 
 app = Flask(__name__)
 
-# Ensure database exists on start
 if not os.path.exists('pricepulse.db'):
     setup_database()
 
@@ -46,21 +45,17 @@ def clear_history():
 def get_products():
     conn = get_db_connection()
     
-    # 1. Get the ID of the MOST RECENT book added (The one you just searched)
     last_book = conn.execute("SELECT id FROM products ORDER BY id DESC LIMIT 1").fetchone()
     
-    # 2. Get List of ALL Unique Books (For the History Tags at the bottom)
     history_rows = conn.execute("SELECT DISTINCT name FROM products").fetchall()
     search_history = [row['name'] for row in history_rows]
     
-    # If no books exist yet, return empty data
     if not last_book:
         conn.close()
         return jsonify({"history": [], "search_history": search_history})
 
     last_id = last_book['id']
 
-    # 3. Get prices ONLY for that specific book ID
     query = '''
         SELECT products.name, products.image_url, products.rating, products.description,
                prices.price, prices.scraped_at 
@@ -74,7 +69,6 @@ def get_products():
 
     results = [dict(row) for row in rows]
     
-    # Round prices to 2 decimals
     for r in results:
         r['price'] = round(r['price'], 2)
 
@@ -88,14 +82,12 @@ def get_products():
 
     prices = [r['price'] for r in results]
     
-    # Calculate Stats
     stats = {
         "max": round(max(prices), 2),
         "min": round(min(prices), 2),
         "avg": round(statistics.mean(prices), 2)
     }
     
-    # Calculate Prediction (Linear Regression)
     prediction_prices = []
     if len(results) > 5:
         x_values = list(range(len(results))) 

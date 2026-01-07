@@ -6,7 +6,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* 1. BACKGROUND IMAGE */
         body { 
             font-family: 'Poppins', sans-serif; 
             padding: 0; margin: 0;
@@ -18,28 +17,25 @@
             justify-content: center;
         }
 
-        /* 2. OFF-WHITE / VINTAGE PANEL */
         .main-wrapper {
             display: flex;
             width: 90%;
             max-width: 1200px;
-            /* Changed to Warm Off-White (#fdfbf7) */
+            
             background: rgba(253, 251, 247, 0.95); 
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 15px 40px rgba(0,0,0,0.6);
             height: 85vh;
-            border: 1px solid #d7ccc8; /* Subtle border */
+            border: 1px solid #d7ccc8; 
         }
 
-        /* LEFT: DASHBOARD */
         .col-dashboard { flex: 2; padding: 40px; overflow-y: auto; }
         
-        /* RIGHT: BOOK DETAILS (Leather Color) */
         .col-book {
             flex: 1;
-            background: #3e2723; /* Dark Leather Brown */
-            color: #efebe9;       /* Light Cream Text */
+            background: #3e2723; 
+            color: #efebe9;       
             padding: 40px;
             text-align: center;
             display: flex;
@@ -49,7 +45,6 @@
             border-left: 4px solid #8d6e63;
         }
 
-        /* CONTROLS */
         .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
         input { 
             flex: 1; padding: 12px; 
@@ -60,14 +55,13 @@
         }
         
         button { padding: 12px 15px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; letter-spacing: 0.5px;}
-        .btn-go { background: #558b2f; }  /* Olive Green */
-        .btn-sim { background: #6d4c41; } /* Warm Brown */
-        .btn-reset { background: #c62828; } /* Muted Red */
+        .btn-go { background: #558b2f; }  
+        .btn-sim { background: #6d4c41; } 
+        .btn-reset { background: #c62828; }
 
-        /* STATS CARDS */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
         .stat-card { 
-            background: #efebe9; /* Very light brown */
+            background: #efebe9; 
             padding: 15px; 
             border-radius: 10px; 
             text-align: center; 
@@ -75,7 +69,6 @@
         }
         .stat-val { font-size: 1.5em; font-weight: bold; color: #3e2723; }
 
-        /* SEARCH HISTORY */
         .history-section { margin-top: 30px; border-top: 2px solid #d7ccc8; padding-top: 20px; }
         .history-title { font-weight: bold; color: #5d4037; margin-bottom: 10px; display: block;}
         .history-tag { 
@@ -83,7 +76,6 @@
             padding: 5px 12px; border-radius: 15px; margin: 5px 5px 0 0; font-size: 0.85em; 
         }
 
-        /* BOOK STYLES */
         .book-cover { width: 160px; border-radius: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); margin-bottom: 25px; border: 4px solid #d7ccc8; }
         .book-title { font-family: 'Playfair Display', serif; font-size: 1.8em; margin-bottom: 10px; line-height: 1.2; color: #fff;}
         .book-rating { font-size: 1.5em; color: #ffb300; margin-bottom: 15px; }
@@ -186,7 +178,6 @@
         predData.push(prices[prices.length - 1]);
         if(data.prediction) data.prediction.forEach(p => { predData.push(p); labels.push('Future'); });
 
-        // --- NEW BROWN CHART COLORS ---
         new Chart(document.getElementById('priceChart'), {
             type: 'line',
             data: {
@@ -195,7 +186,7 @@
                     { 
                         label: 'History (₹)', 
                         data: prices, 
-                        borderColor: '#5d4037',     /* Leather Brown */
+                        borderColor: '#5d4037',     
                         backgroundColor: 'rgba(93, 64, 55, 0.1)',
                         borderWidth: 2,
                         fill: true 
@@ -203,7 +194,7 @@
                     { 
                         label: 'Prediction (₹)', 
                         data: predData, 
-                        borderColor: '#a1887f',     /* Light Clay */
+                        borderColor: '#a1887f',    
                         borderDash: [5,5], 
                         fill: false 
                     }
